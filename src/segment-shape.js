@@ -127,6 +127,7 @@ define([
 
     if (startMarker) {
       this._startMarker = new SegmentMarker({
+        layer:        this._layer,
         segment:      this._segment,
         segmentShape: this,
         draggable:    editable,
@@ -152,6 +153,7 @@ define([
 
     if (endMarker) {
       this._endMarker = new SegmentMarker({
+        layer:        this._layer,
         segment:      this._segment,
         segmentShape: this,
         draggable:    editable,

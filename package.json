@@ -76,6 +76,7 @@
     "colors.css": "~3.0.0",
     "eventemitter3": "~4.0.7",
     "konva": "~7.2.2",
+    "lodash.throttle": "^4.1.1",
     "waveform-data": "^3.3.4"
   }
 }

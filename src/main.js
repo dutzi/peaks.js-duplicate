@@ -221,6 +221,11 @@ define([
       showPlayheadTime:      false,
 
       /**
+       * Whether to hide the axis gridlines or not
+       */
+      hideAxis:              false,
+
+      /**
        * Colour of the axis gridlines
        */
       axisGridlineColor:     '#ccc',

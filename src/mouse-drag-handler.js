@@ -106,8 +106,6 @@ define([
    * @param {MouseEvent} event
    */
   MouseDragHandler.prototype._mouseWheel = function(event) {
-    event.preventDefault();
-
     if (this._handlers.onMouseWheel) {
       this._handlers.onMouseWheel(event);
     }

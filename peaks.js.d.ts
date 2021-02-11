@@ -281,7 +281,8 @@ declare module '@reelcrafter/peaks.js' {
     'player.canplay': () => void;
     'player.error': (error: any) => void;
     'player.pause': (time: number) => void;
-    'player.play': (time: number) => void;
+    'player.playing': (time: number) => void;
+    'player.ended': () => void;
     'player.seeked': (time: number) => void;
     'player.timeupdate': (time: number) => void;
   }

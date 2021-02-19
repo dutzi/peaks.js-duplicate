@@ -122,7 +122,8 @@ define([
       fontSize:     this._peaks.options.fontSize || defaultFontSize,
       fontStyle:    this._peaks.options.fontStyle || defaultFontShape,
       layer:        this._layer,
-      view:         this._view.getName()
+      view:         this._view.getName(),
+      getEndMarker: () => this._endMarker
     });
 
     if (startMarker) {
@@ -135,7 +136,8 @@ define([
         marker:       startMarker,
         onDrag:       this._onSegmentHandleDrag,
         onDragStart:  this._onSegmentHandleDragStart,
-        onDragEnd:    this._onSegmentHandleDragEnd
+        onDragEnd:    this._onSegmentHandleDragEnd,
+        getEndMarker: () => this._endMarker
       });
     }
 
@@ -148,7 +150,8 @@ define([
       fontSize:     this._peaks.options.fontSize || defaultFontSize,
       fontStyle:    this._peaks.options.fontStyle || defaultFontShape,
       layer:        this._layer,
-      view:         this._view.getName()
+      view:         this._view.getName(),
+      getStartMarker: () => this._startMarker
     });
 
     if (endMarker) {
@@ -161,7 +164,8 @@ define([
         marker:       endMarker,
         onDrag:       this._onSegmentHandleDrag,
         onDragStart:  this._onSegmentHandleDragStart,
-        onDragEnd:    this._onSegmentHandleDragEnd
+        onDragEnd:    this._onSegmentHandleDragEnd,
+        getStartMarker: () => this._startMarker
       });
     }
   };

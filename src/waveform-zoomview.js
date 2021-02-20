@@ -567,7 +567,8 @@ define([
   WaveformZoomView.prototype._createWaveform = function() {
     this._waveformShape = new WaveformShape({
       color: this._options.zoomWaveformColor,
-      view: this
+      view: this,
+      pattern: this._peaks.options.zoomviewPattern
     });
 
     this._waveformLayer.add(this._waveformShape);

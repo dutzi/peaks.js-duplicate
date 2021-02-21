@@ -228,6 +228,8 @@ define([
     });
 
     this._peaks.emit('segments.add', segments);
+
+    return segments
   };
 
   /**

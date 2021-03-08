@@ -131,32 +131,42 @@ define([
     self._syncPlayhead(time);
 
     self._mouseDragHandler = new MouseDragHandler(self._stage, {
+      totalMovementX: 0,
+      initPixelIndex: 0,
+      newFrameOffset: 0,
       onMouseDown: function(mousePosX) {
         this.initialFrameOffset = self._frameOffset;
+        this.newFrameOffset = 0;
         this.mouseDownX = mousePosX;
+        this.totalMovementX = 0;
 
         var pixelIndex = self._frameOffset + mousePosX;
+        this.initPixelIndex = pixelIndex;
         var time = self.pixelsToTime(pixelIndex);
 
         self._peaks.emit('zoomview.mousedown', time);
       },
 
-      onMouseMove: function(eventType, mousePosX) {
+      onMouseMove: function(eventType, mousePosX, event) {
+        event.target.requestPointerLock();
+
         if (eventType !== 'touchmove') {
-          var pixelIndex = self._frameOffset + mousePosX;
+          this.totalMovementX += event.movementX
+          var pixelIndex = this.mouseDownX + this.initialFrameOffset + this.totalMovementX;
           var time = self.pixelsToTime(pixelIndex);
 
           self._peaks.emit('zoomview.drag', time);
-          return;
+
+          if (event.metaKey) {
+            self._playheadLayer.updatePlayheadTime(time);
+          }
         }
 
-        // Moving the mouse to the left increases the time position of the
-        // left-hand edge of the visible waveform.
-        var diff = this.mouseDownX - mousePosX;
-
         var newFrameOffset = Utils.clamp(
-          this.initialFrameOffset + diff, 0, self._pixelLength - self._width
+          this.initialFrameOffset + this.totalMovementX, 0, self._pixelLength - self._width
         );
+
+        this.newFrameOffset = newFrameOffset
 
         if (newFrameOffset !== this.initialFrameOffset) {
           self._updateWaveform(newFrameOffset);
@@ -164,6 +174,8 @@ define([
       },
 
       onMouseUp: function(/* mousePosX */) {
+        document.exitPointerLock();
+
         // Set playhead position only on click release, when not dragging.
         if (!self._mouseDragHandler.isDragging()) {
           var mouseDownX = Math.floor(this.mouseDownX);

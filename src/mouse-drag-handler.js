@@ -87,7 +87,7 @@ define([
     if (this._handlers.onMouseDown) {
       var mouseDownPosX = this._getMousePosX(this._mouseDownClientX);
 
-      this._handlers.onMouseDown(mouseDownPosX);
+      this._handlers.onMouseDown(mouseDownPosX, event);
     }
 
     // Use the window mousemove and mouseup handlers instead of the
@@ -137,7 +137,7 @@ define([
     if (this._handlers.onMouseMove) {
       var mousePosX = this._getMousePosX(clientX);
 
-      this._handlers.onMouseMove(event.type, mousePosX);
+      this._handlers.onMouseMove(event.type, mousePosX, event);
     }
   };
 

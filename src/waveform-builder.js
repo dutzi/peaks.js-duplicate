@@ -300,7 +300,11 @@ define([
     // currentSrc attribute will contain the source media URL. Otherwise,
     // we wait for a canplay event to tell us when the media is ready.
 
-    var mediaSourceUrl = self._peaks.options.mediaElement.currentSrc;
+
+    var mediaSourceUrl = self._peaks.options.src2;
+    // console.log(0, self._peaks.options.src)
+    // console.log(1, self._peaks.options.src2)
+    // console.log(2, mediaSourceUrl)
 
     if (mediaSourceUrl) {
       self._requestAudioAndBuildWaveformData(

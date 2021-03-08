@@ -7,9 +7,12 @@
  */
 
 define([
-  'konva'
-], function(Konva) {
+  'konva',
+  'popmotion'
+], function(Konva, Popmotion) {
   'use strict';
+
+  const { inertia } = Popmotion
 
   function getMarkerObject(obj) {
     while (obj.parent !== null) {
@@ -97,6 +100,7 @@ define([
     window.addEventListener('touchmove', this._mouseMove, false);
     window.addEventListener('mouseup', this._mouseUp, false);
     window.addEventListener('touchend', this._mouseUp, false);
+    window.addEventListener('touchcancel', this._mouseUp, false);
     window.addEventListener('blur', this._mouseUp, false);
   };
 
@@ -137,6 +141,8 @@ define([
     if (this._handlers.onMouseMove) {
       var mousePosX = this._getMousePosX(clientX);
 
+      this.lastMousePosX = mousePosX;
+
       this._handlers.onMouseMove(event.type, mousePosX, event);
     }
   };
@@ -162,6 +168,13 @@ define([
 
     if (this._handlers.onMouseUp) {
       var mousePosX = this._getMousePosX(clientX);
+
+      console.log(mousePosX, this.lastMousePosX)
+      inertia({
+        from: mousePosX,
+        velocity: mousePosX - this.lastMousePosX,
+        onUpdate: value => console.log(value)
+      })
 
       this._handlers.onMouseUp(mousePosX);
     }

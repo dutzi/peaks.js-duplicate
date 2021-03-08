@@ -12,6 +12,7 @@ define([
   './cue-emitter',
   './waveform-points',
   './waveform-segments',
+  './waveform-subtitles',
   './keyboard-handler',
   './mediaelement-player',
   './player',
@@ -26,6 +27,7 @@ define([
     CueEmitter,
     WaveformPoints,
     WaveformSegments,
+    WaveformSubtitles,
     KeyboardHandler,
     MediaElementPlayer,
     Player,
@@ -336,6 +338,7 @@ define([
     }
 
     var zoomviewContainer = containers.zoomview || containers.zoom;
+    var subtitlesviewContainer = containers.subtitlesview;
 
     if (!Utils.isHTMLElement(zoomviewContainer) &&
         !Utils.isHTMLElement(containers.overview)) {
@@ -366,6 +369,7 @@ define([
 
     instance.player = new Player(instance, player);
     instance.segments = new WaveformSegments(instance);
+    instance.subtitles = new WaveformSubtitles(instance);
     instance.points = new WaveformPoints(instance);
     instance.zoom = new ZoomController(instance, instance.options.zoomLevels);
     instance.views = new ViewController(instance);
@@ -390,6 +394,10 @@ define([
 
       if (zoomviewContainer) {
         instance.views.createZoomview(zoomviewContainer);
+      }
+
+      if (subtitlesviewContainer) {
+        instance.views.createSubtitlesview(subtitlesviewContainer);
       }
 
       instance._addWindowResizeHandler();

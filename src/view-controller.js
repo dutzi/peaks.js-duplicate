@@ -9,10 +9,12 @@
 define([
   './waveform-overview',
   './waveform-zoomview',
+  './subtitlesview',
   './utils'
 ], function(
     WaveformOverview,
     WaveformZoomView,
+    Subtitlesview,
     Utils) {
   'use strict';
 
@@ -68,6 +70,22 @@ define([
     );
 
     return this._zoomview;
+  };
+
+  ViewController.prototype.createSubtitlesview = function(container) {
+    if (this._subtitlesview) {
+      return this._subtitlesview;
+    }
+
+    var waveformData = this._peaks.getWaveformData();
+
+    this._subtitlesview = new Subtitlesview(
+      waveformData,
+      container,
+      this._peaks
+    );
+
+    return this._subtitlesview;
   };
 
   ViewController.prototype.destroyOverview = function() {

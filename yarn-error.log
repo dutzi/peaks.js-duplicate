@@ -1,0 +1,118 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/bin/yarn publish
+
+PATH: 
+  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  14.15.5
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: canceled
+      at Interface.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:136216:13)
+      at Interface.emit (events.js:315:20)
+      at Interface._ttyWrite (readline.js:875:16)
+      at ReadStream.onkeypress (readline.js:213:10)
+      at ReadStream.emit (events.js:315:20)
+      at emitKeys (internal/readline/utils.js:345:14)
+      at emitKeys.next (<anonymous>)
+      at ReadStream.onData (readline.js:1144:36)
+      at ReadStream.emit (events.js:315:20)
+      at addChunk (internal/streams/readable.js:309:12)
+
+npm manifest: 
+  {
+    "name": "@notdutzi/peaks.js",
+    "version": "1.0.0",
+    "description": "JavaScript UI component for displaying audio waveforms",
+    "main": "./peaks.js",
+    "files": [
+      "peaks.js",
+      "src"
+    ],
+    "contributors": [
+      "Chris Finch (https://github.com/chrisfinch)",
+      "Thomas Parisot (https://github.com/oncletom)",
+      "Chris Needham (https://github.com/chrisn)",
+      "Sam Hulick (https://github.com/ffxsam)"
+    ],
+    "keywords": [
+      "audio",
+      "visualisation",
+      "bbc",
+      "webaudio",
+      "browser",
+      "interactive",
+      "waveform"
+    ],
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/dutzi/peaks.js.git"
+    },
+    "license": "LGPL-3.0",
+    "engines": {
+      "node": ">= 8.11.2"
+    },
+    "scripts": {
+      "prebuild": "npm run lint",
+      "build": "browserify -d -e ./src/main.js -t deamdify -s peaks | exorcist peaks.js.map | derequire - > peaks.js",
+      "postbuild": "copyfiles peaks.js peaks.js.map demo",
+      "doc": "jsdoc --private --destination docs --recurse src",
+      "lint": "eslint src/*.js test/**/*.js test/*.js karma.conf.js",
+      "pretest": "npm run build",
+      "test": "karma start",
+      "test-watch": "npm test -- --auto-watch --no-single-run",
+      "copy-demo-files": "copyfiles test_data/sample.mp3 test_data/07023003.mp3 test_data/07023003-2channel.dat demo",
+      "prestart": "npm run build && npm run copy-demo-files",
+      "start": "serve --listen 8080 --no-clipboard demo",
+      "prepack": "npm run build",
+      "clean": "rm demo/peaks.js* peaks.js peaks.js.map"
+    },
+    "devDependencies": {
+      "babel-eslint": "^10.1.0",
+      "browserify": "~17.0.0",
+      "browserify-istanbul": "~3.0.1",
+      "chai": "~4.2.0",
+      "copyfiles": "~2.4.1",
+      "deamdify": "~0.3.0",
+      "derequire": "~2.1.1",
+      "eslint": "~7.19.0",
+      "exorcist": "~1.0.1",
+      "jsdoc": "~3.6.6",
+      "karma": "~6.0.3",
+      "karma-browserify": "~8.0.0",
+      "karma-browserstack-launcher": "~1.6.0",
+      "karma-chai-sinon": "~0.1.5",
+      "karma-chrome-launcher": "~3.1.0",
+      "karma-coverage": "~2.0.3",
+      "karma-firefox-launcher": "~2.1.0",
+      "karma-html2js-preprocessor": "~1.1.0",
+      "karma-mocha": "~2.0.1",
+      "karma-safari-launcher": "~1.0.0",
+      "karma-spec-reporter": "~0.0.32",
+      "mocha": "~8.2.1",
+      "serve": "~11.3.2",
+      "sinon": "~9.2.4",
+      "sinon-chai": "~3.5.0",
+      "watchify": "~4.0.0"
+    },
+    "dependencies": {
+      "colors.css": "~3.0.0",
+      "eventemitter3": "~4.0.7",
+      "konva": "~7.2.2",
+      "lodash.throttle": "^4.1.1",
+      "waveform-data": "^3.3.4"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

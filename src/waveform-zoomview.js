@@ -157,12 +157,12 @@ define([
         const slowDownFactor = this.isAltKeyDownWhenMouseDown ? 1 / 10 : 1
         const zoomChangeFactor = this.mouseDownZoomScale / self._peaks.views.getView('zoomview')._scale
 
-        function calculateTime() {
+        const calculateTime = () => {
           var pixelIndex = this.mouseDownX + this.initialFrameOffset * zoomChangeFactor + this.totalMovementX * zoomChangeFactor + (this.initPixelIndex - this.initialFrameOffset) * (zoomChangeFactor - 1);
           return self.pixelsToTime(pixelIndex);
         }
 
-        function calculateOffset() {
+        const calculateOffset = () => {
           return this.initialFrameOffset * zoomChangeFactor + this.totalMovementX * slowDownFactor * zoomChangeFactor + (this.initPixelIndex - this.initialFrameOffset) * (zoomChangeFactor - 1)
         }
 

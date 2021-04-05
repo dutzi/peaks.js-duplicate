@@ -136,6 +136,7 @@ define([
       newFrameOffset: 0,
       isAltKeyDownWhenMouseDown: false,
       mouseDownZoom: 0,
+      initMousePosX: 0,
 
       onMouseDown: function(mousePosX, event) {
         this.isAltKeyDownWhenMouseDown = event.evt.altKey
@@ -147,6 +148,7 @@ define([
 
         var pixelIndex = self._frameOffset + mousePosX;
         this.initPixelIndex = pixelIndex;
+        this.initMousePosX = mousePosX;
         var time = self.pixelsToTime(pixelIndex);
         self._peaks.emit('zoomview.mousedown', time);
       },
@@ -154,21 +156,40 @@ define([
       onMouseMove: function(eventType, mousePosX, event) {
         event.target.requestPointerLock();
 
-        const slowDownFactor = this.isAltKeyDownWhenMouseDown ? 1 / 10 : 1
-        const zoomChangeFactor = this.mouseDownZoomScale / self._peaks.views.getView('zoomview')._scale
+        const slowDownFactor = this.isAltKeyDownWhenMouseDown ? 1 / 10 : 1;
+        const zoomChangeFactor = this.mouseDownZoomScale / self._peaks.views.getView('zoomview')._scale;
 
         const calculateTime = () => {
-          var pixelIndex = this.mouseDownX + this.initialFrameOffset * zoomChangeFactor + this.totalMovementX * zoomChangeFactor + (this.initPixelIndex - this.initialFrameOffset) * (zoomChangeFactor - 1);
+          var pixelIndex =
+            this.mouseDownX +
+            this.initialFrameOffset * zoomChangeFactor +
+            this.totalMovementX * zoomChangeFactor +
+            (this.initPixelIndex - this.initialFrameOffset) * (zoomChangeFactor - 1);
           return self.pixelsToTime(pixelIndex);
-        }
+        };
 
         const calculateOffset = () => {
-          return this.initialFrameOffset * zoomChangeFactor + this.totalMovementX * slowDownFactor * zoomChangeFactor + (this.initPixelIndex - this.initialFrameOffset) * (zoomChangeFactor - 1)
-        }
+          let mousePos = this.totalMovementX + this.initMousePosX;
+          const width = self._width;
+          const padding = 100;
+          const absMousePos = mousePos + this.initialFrameOffset;
+          let offset = 0;
+          if (absMousePos < self._frameOffset + 100) {
+            offset = self._frameOffset + (absMousePos - self._frameOffset - 100);
+          } else if (absMousePos > self._frameOffset + width - padding) {
+            offset = self._frameOffset + absMousePos - self._frameOffset - width + padding;
+          } else {
+            offset = self._frameOffset;
+          }
+          return (
+            offset * slowDownFactor * zoomChangeFactor +
+            (this.initPixelIndex - this.initialFrameOffset) * (zoomChangeFactor - 1)
+          );
+        };
 
         if (eventType !== 'touchmove') {
-          this.totalMovementX += event.movementX
-          const time = calculateTime()
+          this.totalMovementX += event.movementX;
+          const time = calculateTime();
 
           self._peaks.emit('zoomview.drag', time);
 
@@ -177,11 +198,8 @@ define([
           }
         }
 
-        var newFrameOffset = Utils.clamp(
-          Math.round(calculateOffset()), 0, self._pixelLength - self._width
-        );
-
-        this.newFrameOffset = newFrameOffset
+        var newFrameOffset = Math.max(Math.min(Math.round(calculateOffset()), self._pixelLength - self._width), 0);
+        this.newFrameOffset = newFrameOffset;
 
         if (newFrameOffset !== this.initialFrameOffset) {
           self._updateWaveform(newFrameOffset);

@@ -296,13 +296,13 @@ define([
     return 'zoomview';
   };
 
-  WaveformZoomView.prototype._onTimeUpdate = function(time) {
-    if (this._mouseDragHandler.isDragging()) {
-      return;
-    }
+  // WaveformZoomView.prototype._onTimeUpdate = function(time) {
+  //   if (this._mouseDragHandler.isDragging()) {
+  //     return;
+  //   }
 
-    this._syncPlayhead(time);
-  };
+  //   this._syncPlayhead(time);
+  // };
 
   WaveformZoomView.prototype._updateTime = function() {
     const now = performance.now()
@@ -310,11 +310,16 @@ define([
     const isPlaying = this._peaks.player.isPlaying()
     const isSeeking = this._peaks.views.getView('overview')._isSeeking;
 
-    if (isSeeking || (!isPlaying && !isSeeking) || this._mouseDragHandler.isDragging() || now - this.lastUserInteractionTime < 5000) {
+    if (
+      isSeeking ||
+      (!isPlaying && !isSeeking) ||
+      (this._options.detachPlayheadOnDrag && this._mouseDragHandler.isDragging()) ||
+      now - this.lastUserInteractionTime < 5000
+    ) {
       this._playheadLayer.updatePlayheadTime(this._peaks.player.getCurrentTime());
 
       if (!this._cancelRequestAnimationFrame) {
-        window.requestAnimationFrame(this._updateTime)
+        window.requestAnimationFrame(this._updateTime);
       }
       return;
     }

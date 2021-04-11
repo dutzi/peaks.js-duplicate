@@ -63,7 +63,7 @@ define([
 
     // Register event handlers
     // self._peaks.on('player.timeupdate', self._onTimeUpdate);
-    self._peaks.on('player.play', self._onPlay);
+    self._peaks.on('player.playing', self._onPlay);
     self._peaks.on('player.pause', self._onPause);
     self._peaks.on('window_resize', self._onWindowResize);
     self._peaks.on('keyboard.left', self._onKeyboardLeft);
@@ -250,7 +250,7 @@ define([
           return;
         }
 
-        self.lastUserInteractionTime = performance.now()
+        self.timeAtLastWheelEvent = performance.now()
 
         event.preventDefault();
 
@@ -312,7 +312,7 @@ define([
       isSeeking ||
       (!isPlaying && !isSeeking) ||
       (this._options.detachPlayheadOnDrag && this._mouseDragHandler.isDragging()) ||
-      now - this.lastUserInteractionTime < 5000
+      (now - this.timeAtLastWheelEvent < 5000 && this.timeAtLastPlayEvent < this.timeAtLastWheelEvent)
     ) {
       this._playheadLayer.updatePlayheadTime(this._peaks.player.getCurrentTime());
 
@@ -329,6 +329,7 @@ define([
   };
 
   WaveformZoomView.prototype._onPlay = function(time) {
+    this.timeAtLastPlayEvent = performance.now();
     this._playheadLayer.updatePlayheadTime(time);
   };
 
@@ -845,7 +846,7 @@ define([
 
     // Unregister event handlers
     // this._peaks.off('player.timeupdate', this._onTimeUpdate);
-    this._peaks.off('player.play', this._onPlay);
+    this._peaks.off('player.playing', this._onPlay);
     this._peaks.off('player.pause', this._onPause);
     this._peaks.off('window_resize', this._onWindowResize);
     this._peaks.off('keyboard.left', this._onKeyboardLeft);
